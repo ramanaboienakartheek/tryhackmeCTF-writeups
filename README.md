@@ -8,8 +8,8 @@ This room is a perfect place for starting one's career in Pentesting. It shows s
 3. We find the services exposed by the machine.
    
     This is where the basics of reconnaisance come into play. I personally use nmap which is default on the Kali 24.04.5 LTS.1 install I have. We start with a basic nmap command <mark>nmap -sV -sC -oN nmap/initial [webappIP]</mark>. This nmap command is commonly used by Ippsec and I have incorporated it into my setup as well. the -sV probes all open ports it finds to determine if we can get the service/version information. The -sC flag runs scripts against open ports as well to determine if there are external/common vulnerabilities that we can use outright. And -oN outputs the output of the nmap scan into a normal format so you have it for future use. In here i directed the output to my directory called Nmap and to file called Initial. The results of the given command are as follows:
-
-<mark>Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-19 08:08 UTC
+```
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-10-19 08:08 UTC
 Nmap scan report for ip-10-49-141-174.ap-south-1.compute.internal (10.49.141.174)
 Host is up (0.00016s latency).
 Not shown: 994 closed tcp ports (reset)
@@ -41,8 +41,41 @@ Host script results:
 |   date: 2026-10-19T08:09:08
 |_  start_date: N/A
 
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 12.14 seconds</mark>
+Nmap done: 1 IP address (1 host up) scanned in 12.14 seconds.
+```
+Through this we can see that there are a total of 5 open ports and some services running on them.
 
+4. What is the name of Hidden Directory on the Web Server?
 
+```
+<html>
 
+<h1>Undergoing maintenance</h1>
+
+<h4>Please check back later</h4>
+<!-- Check our dev note section if you need to know what to work on. -->
+</html>
+```
+We can see there is a dev notes section somewhere so lets break out our domain enumeration tool. Gobuster is my go-to enum tool, The command we give is <mark>gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -u http://[webappIP]</mark>. And the result is as follows.
+```
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.49.183.213
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/development          (Status: 301) [Size: 320] [--> http://10.49.183.213/development/]
+Progress: 87664 / 87665 (100.00%)
+===============================================================
+Finished
+===============================================================
+```
+As we can see in the command that we mentioned <mark>directory-list-2.3-small.txt</mark>, this wordlist brute forced a huge number of 225,000 common folder and file names including (/admin, /login, /uploads, /backup) etc. And the result shows one hidden directory which is <mark>/development</mark>. 
