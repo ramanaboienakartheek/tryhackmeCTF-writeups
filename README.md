@@ -264,7 +264,8 @@ Session completed
 The required password is **beeswax**
 And now we change permissions for the key.tx, by using chmod 600 key.tx
 
-9. One final step, where we use the final command to get into kay's account. Command: ssh -i key.tx "kay@web_ip"
+One final step, where we use the final command to get into kay's account. Command: ssh -i key.tx "kay@web_ip"
+
 
 And boom we're in kay's account, and just view the contents of her file using ls command, and read the final password by cat pass.bak 
 ```
